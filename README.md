@@ -3,6 +3,6 @@
 - RWD 
 - JavaScript DOM Manipulation
 ## Assignment - Week 2
-Complete 5 tasks (1 optional)
+Complete 5 tasks (1 optional).
 - Python
 - JavaScript

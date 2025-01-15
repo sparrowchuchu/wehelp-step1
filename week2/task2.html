@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>task2</title>
+</head>
+<body>
+    <script>
+        let booking = {
+            "John": Array.from({ length: 24}, (num, i) => i + 1),
+            "Bob": Array.from({ length: 24}, (num, i) => i + 1),
+            "Jenny": Array.from({ length: 24}, (num, i) => i + 1),
+        }
+        
+        function book(consultants, hour, duration, criteria){
+            // 將 criteria 與 consultant 建立 array
+            let order = consultants.map(c => ([c[criteria],c["name"]]));
+            // 依據 criteria 分別做排序
+            if (criteria === "price"){
+                order.sort((a, b) => a[0] - b[0]);  // 小到大
+            } else if (criteria === "rate"){
+                order.sort((a, b) => b[0] - a[0]);  // 大到小
+            }
+            for (let i = 0; i < order.length; i++) {
+                let consultantName = order[i][1];
+                let availableHours = booking[consultantName]; 
+                let endHour = hour + duration - 1;
+                
+                // 先判斷可不可以 booking
+                let available = true;
+                for (let h= hour; h <= endHour; h++){
+                    if(!availableHours.includes(h)){
+                        available = false;
+                        break
+                    }
+                }
+                // 可以 booking,移除 booked hour.
+                if (available) {
+                    let index = availableHours.indexOf(hour);
+                    availableHours.splice(index, duration);
+                    console.log(consultantName);
+                    return;
+                }
+            }
+            console.log("No Service");
+        }
+
+        consultants=[ 
+            {"name":"John", "rate":4.5, "price":1000}, 
+            {"name":"Bob", "rate":3, "price":1200}, 
+            {"name":"Jenny", "rate":3.8, "price":800} 
+        ];
+
+        book(consultants, 15, 1, "price");  // Jenny
+        book(consultants, 11, 2, "price");  // Jenny
+        book(consultants, 10, 2, "price");  // John
+        book(consultants, 20, 2, "rate");  // John
+        book(consultants, 11, 1, "rate");  // Bob
+        book(consultants, 11, 2, "rate");  // No Service
+        book(consultants, 14, 3, "price");  // John
+    </script>
+</body>
+</html>

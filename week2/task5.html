@@ -8,7 +8,28 @@
 <body>
     <script>
         function find(spaces, stat, n){
-            // Your code here
+            let availableSpaces = [];
+    
+            for (let i = 0; i < spaces.length; i++) {
+                if (stat[i]) {
+                    availableSpaces.push(spaces[i] - n);
+                } else {
+                    availableSpaces.push(-1);
+                }
+            }
+
+            let min = 100;
+            for (let num of availableSpaces) {
+                if (num >= 0 && num < min) {
+                    min = num;
+                }
+            }
+
+            if (availableSpaces.includes(min)) {
+                console.log(availableSpaces.indexOf(min));
+            } else {
+                console.log(-1);
+            }
         }
 
 

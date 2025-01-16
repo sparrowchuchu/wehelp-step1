@@ -8,11 +8,87 @@
 <body>
     <script>
         function findAndPrint(messages,currentStation){
-            // Your code here
+            const greenLine = [
+                "Songshan", "Nanjing Sanmin", "Taipei Arena", "Nanjing Fuxing", "Songjiang Nanjing",
+                "Zhongshan", "Beimen", "Ximen", "Xiaonanmen", "Chiang Kai-shek Memorial Hall",
+                "Guting", "Taipower Building", "Gongguan", "Wanlong", "Jingmei",
+                "Dapinglin", ["Qizhang", "Xiaobitan"], "Xindian City Hall", "Xindian"
+            ];
+
+            const friendsStation = {};  // "friend": [index, branch_index, station]
+
+            // Process each message and find the corresponding station for each friend
+            for (let friend in messages) {
+                const message = messages[friend];
+
+                for (let index = 0; index < greenLine.length; index++) {
+                    const station = greenLine[index];
+                    let branchIndex = 0;
+
+                    if (typeof station === 'string' && message.includes(station)) {
+                        friendsStation[friend] = [index, branchIndex, station];
+                    } else if (Array.isArray(station)) {
+                        for (let i = 0; i < station.length; i++) {
+                            const branchStation = station[i];
+                            if (typeof branchStation === 'string' && message.includes(branchStation)) {
+                                friendsStation[friend] = [index, branchIndex, branchStation];
+                            }
+                            branchIndex++;
+                        }
+                    }
+                }
+            }
+
+            let currentBranchIndex = 0;
+            let flag = false;
+            let notFound = true;
+
+            // Find the current station in the greenLine array
+            let currentIndex = -1;
+            for (let i = 0; i < greenLine.length; i++) {
+                const station = greenLine[i];
+                if (typeof station === 'string' && station === currentStation) {
+                    currentIndex = i;
+                    notFound = false;
+                    break;
+                } else if (Array.isArray(station)) {
+                    for (let j = 0; j < station.length; j++) {
+                        const branchStation = station[j];
+                        if (branchStation === currentStation) {
+                            currentIndex = i;
+                            notFound = false;
+                            flag = true;
+                            break;
+                        }
+                        currentBranchIndex++;
+                    }
+                    if (flag) break;
+                    currentBranchIndex = 0;
+                }
+            }
+
+            if (notFound) {
+                console.log("Current station not found.");
+                return;
+            }
+
+            // Calculate the distance for each friend from the current station
+            const distance = {};
+            for (let friend in friendsStation) {
+                const index = friendsStation[friend];
+                distance[friend] = Math.abs(currentIndex - index[0]) + index[1];
+            }
+
+            // Find the friend with the minimum distance
+            const minDistance = Math.min(...Object.values(distance));
+            const nearestFriend = Object.keys(distance).filter(friend => distance[friend] === minDistance);
+
+            console.log(nearestFriend[0]);
+
         }
 
         const messages={
-            "Leslie":"I'm at home near Xiaobition station.",
+            "Leslie":"I'm at home near Xiaobitan station.",
             "Bob":"I'm at Ximen MRT station.",
             "Mary":"I have a drink near Jingmei MRT station.",
             "Copper":"I just saw a concert at Taipei Arena.",

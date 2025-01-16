@@ -4,7 +4,6 @@ booking={
     "Jenny":[h for h in range(1,25)]
     }
          
-
 def book(consultants, hour, duration, criteria):
     # 將 criteria 與 consultant 建立 list 
     order = [[i[criteria], i["name"]] for i in consultants]
@@ -13,6 +12,7 @@ def book(consultants, hour, duration, criteria):
         order.sort()  # 小到大
     elif criteria == "rate":
         order.sort(reverse = True)  # 大到小
+        
     index = 0
     while index < len(order):
         consultant_name = order[index][1]
@@ -31,14 +31,11 @@ def book(consultants, hour, duration, criteria):
 
     print("No Service")
 
-
-
 consultants=[ 
     {"name":"John", "rate":4.5, "price":1000}, 
     {"name":"Bob", "rate":3, "price":1200}, 
     {"name":"Jenny", "rate":3.8, "price":800} 
 ]
-
 
 book(consultants, 15, 1, "price")  # Jenny
 book(consultants, 11, 2, "price")  # Jenny

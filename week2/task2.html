@@ -23,23 +23,23 @@
                 order.sort((a, b) => b[0] - a[0]);  // 大到小
             }
             for (let i = 0; i < order.length; i++) {
-                let consultantName = order[i][1];
-                let availableHours = booking[consultantName]; 
-                let endHour = hour + duration - 1;
+                let consultant_name = order[i][1];
+                let available_hours = booking[consultant_name]; 
+                let end_hour = hour + duration - 1;
                 
                 // 先判斷可不可以 booking
                 let available = true;
-                for (let h= hour; h <= endHour; h++){
-                    if(!availableHours.includes(h)){
+                for (let h= hour; h <= end_hour; h++){
+                    if(!available_hours.includes(h)){
                         available = false;
                         break
                     }
                 }
                 // 可以 booking,移除 booked hour.
                 if (available) {
-                    let index = availableHours.indexOf(hour);
-                    availableHours.splice(index, duration);
-                    console.log(consultantName);
+                    let index = available_hours.indexOf(hour);
+                    available_hours.splice(index, duration);
+                    console.log(consultant_name);
                     return;
                 }
             }
@@ -51,7 +51,7 @@
             {"name":"Bob", "rate":3, "price":1200}, 
             {"name":"Jenny", "rate":3.8, "price":800} 
         ];
-
+        
         book(consultants, 15, 1, "price");  // Jenny
         book(consultants, 11, 2, "price");  // Jenny
         book(consultants, 10, 2, "price");  // John

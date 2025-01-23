@@ -48,7 +48,7 @@ function getItemData(indexArr){
 }
 
 async function loadmore(){
-    console.log("loadmore");
+    // console.log("loadmore");
     for(let i = 0; i < 10; i++){
         indexArr[0] += 1;
         let section = document.querySelector('.box-b');

@@ -54,20 +54,24 @@ async function loadmore(){
         let section = document.querySelector('.box-b');
         let data = await getApiData(indexArr[0]);
         let newParentDiv = document.createElement('div');
+        let newMark = document.createElement('img');
         let newImg = document.createElement('img');
         let newDiv = document.createElement('div');
         let title = document.createTextNode(data[0]);
         newParentDiv.className = "item";
+        newMark.className = 'item-mark';
+        newMark.src = 'static/star.png';
+        newMark.width = 30;
         newImg.className = 'item-img';
         newImg.src = data[1];
         newDiv.className = 'item-title single-ellipsis';
+        newParentDiv.appendChild(newMark);
         newParentDiv.appendChild(newImg);
         newDiv.appendChild(title);
         newParentDiv.appendChild(newImg);
         newParentDiv.appendChild(newDiv);
         section.insertBefore(newParentDiv, null);
         if (indexArr[0] > (data[2] - 2)){
-            console.log(indexArr[0], data[2]);
             btnload.style.display = "none";
             break
         }

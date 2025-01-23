@@ -25,6 +25,8 @@ main{
     margin: 0 auto;
 }
 
+footer{height: 250px;}
+
 ul{display: flex; margin: 0px; padding: 0px;}
 li{list-style: none; text-align: center;}
 

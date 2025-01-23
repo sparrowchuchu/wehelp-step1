@@ -13,8 +13,8 @@ point: Algorithm
 - 深度優先搜尋 Depth-First Search, DFS
 
 ## Assignment - Week 3
-Complete at least 3 tasks to get passed (2 optional).
-- Python
-- JavaScript
+Complete at least 3 tasks to get passed (There are 4 tasks, and 2 are optional.).
+- Python Web Crawler
+- JavaScript Fetch Api
 
 

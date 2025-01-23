@@ -12,5 +12,8 @@ const toggleClose = () =>{
     dropdown.style.display = "none";
 }
 
+
 dropOption.addEventListener('click', toggleDropdown);
 btnX.addEventListener('click', toggleClose);
+
+

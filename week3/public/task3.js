@@ -43,8 +43,8 @@ function getItemData(){
     })
 }
 
-document.addEventListener('load', getPromoData());
-document.addEventListener('load', getItemData());
+document.addEventListener('DOMContentLoaded ', getPromoData());
+document.addEventListener('DOMContentLoaded ', getItemData());
 // document.addEventListener('DOMContentLoaded', getPromoData());
 
 

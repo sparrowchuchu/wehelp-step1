@@ -1,4 +1,4 @@
-async function getApiData(i){
+const getApiData = async (i) =>{
     // Here is URL for tourist spots in Taipei provided by Taipei City Government
     let src = "https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-1";
     let response = await fetch(src);
@@ -10,13 +10,10 @@ async function getApiData(i){
     let imgUrl = filelist.match(regex)[0];
     return [title, imgUrl, results.length];
 }
-
-function getPromoData(indexArr){
-    this.indexArr = indexArr;
+const getPromoData = () =>{
     let imgDiv = document.querySelectorAll('.clip-img-s');
     imgDiv.forEach( async(div, i) => {
         indexArr[0] = i;
-        // console.log('indexArr[0]', indexArr[0]);
         let data = await getApiData(indexArr[0]);
         let newH4 = document.createElement('h4');
         let newImg = document.createElement('img');
@@ -28,9 +25,7 @@ function getPromoData(indexArr){
         div.parentNode.insertBefore(newH4, div.nextSibling);
     })
 }
-
-function getItemData(indexArr){
-    this.indexArr = indexArr;
+const getItemData = () =>{
     let item = document.querySelectorAll('.item');
     item.forEach( async(div) => {
         indexArr[0] += 1;
@@ -46,9 +41,8 @@ function getItemData(indexArr){
         div.appendChild(newDiv);
     })
 }
-
-async function loadmore(){
-    console.log("loadmore");
+const loadmore = async () =>{
+    // console.log("loadmore");
     for(let i = 0; i < 10; i++){
         indexArr[0] += 1;
         let section = document.querySelector('.box-b');
@@ -60,7 +54,7 @@ async function loadmore(){
         let title = document.createTextNode(data[0]);
         newParentDiv.className = "item";
         newMark.className = 'item-mark';
-        newMark.src = 'static/star.png';
+        newMark.src = 'star.png';
         newMark.width = 30;
         newImg.className = 'item-img';
         newImg.src = data[1];
@@ -77,13 +71,29 @@ async function loadmore(){
         }
     }
 }
-
+const toggleDropdown = () =>{
+    dropOption.style.display = "none";
+    dropdown.style.display = "block";
+}
+const toggleClose = () =>{
+    dropOption.style.display = "block";
+    dropdown.style.display = "none";
+}
 
 const indexArr = [0];
 const btnload = document.querySelector('#loadmore');
+const dropOption = document.querySelector('.dropOption');
+const dropdown = document.querySelector('.dropdown');
+const btnX = document.querySelector('.btn-x');
 
-document.addEventListener('DOMContentLoaded ', getPromoData(indexArr));
-document.addEventListener('DOMContentLoaded ', getItemData(indexArr));
+document.addEventListener('DOMContentLoaded ', getPromoData());
+document.addEventListener('DOMContentLoaded ', getItemData());
 btnload.addEventListener('click', loadmore);
+dropOption.addEventListener('click', toggleDropdown);
+btnX.addEventListener('click', toggleClose);
+
+
+
+
 
 

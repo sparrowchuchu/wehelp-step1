@@ -34,6 +34,7 @@ def getUrlData(url):
         req = request.Request(url, headers = headers)
         response = opener.open(req)
     except error.HTTPError as e:
+        print(response.getcode())
         # print(e)
         pass
     else:

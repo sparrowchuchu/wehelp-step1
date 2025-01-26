@@ -1,12 +1,14 @@
+
 const getApiData = async () =>{
     // Here is URL for tourist spots in Taipei provided by Taipei City Government
     let src = "https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-1";
     let response = await fetch(src);
     let data = await response.json();
     let results = data.data.results;
-    return results
+    return results;
 }
-const getPromoData = (apidata) =>{
+const setPromoData = (apidata) =>{
+    console.log("setPromoData");
     let imgDiv = document.querySelectorAll('.clip-img-s');
     imgDiv.forEach( async(div, i) => {
         indexArr[0] = i;
@@ -24,7 +26,8 @@ const getPromoData = (apidata) =>{
         div.parentNode.insertBefore(newH4, div.nextSibling);
     })
 }
-const getItemData = (apidata) =>{
+const setItemData = (apidata) =>{
+    console.log("setItemData");
     let item = document.querySelectorAll('.item');
     item.forEach( async(div) => {
         indexArr[0] += 1;
@@ -70,7 +73,7 @@ const loadmore = (apidata) =>{
         newParentDiv.appendChild(newImg);
         newParentDiv.appendChild(newDiv);
         section.insertBefore(newParentDiv, null);
-        if (indexArr[0] > (data.length - 2)){
+        if (indexArr[0] > (apidata.length - 2)){
             btnload.style.display = "none";
             break
         }
@@ -91,14 +94,21 @@ const dropOption = document.querySelector('.dropOption');
 const dropdown = document.querySelector('.dropdown');
 const btnX = document.querySelector('.btn-x');
 
-window.addEventListener('load', async () => {
-    let apidata = await getApiData();
-    getPromoData(apidata);
-    getItemData(apidata);
-});
+window.addEventListener('load', async(event) => {
+    // console.log(event.currentTarget);  // window
+    // console.log(this.localStorage);  // logs the localStorage of window
+    // console.log(event.currentTarget === this); // logs `true`
+    const apidata = await getApiData();
+    setPromoData(apidata);
+    setItemData(apidata);
+}); 
 
-btnload.addEventListener('click', async () => {
-    let apidata = await getApiData();
+btnload.addEventListener('click', async(event) => {
+    // console.log(event.currentTarget);  // btnload element
+    // console.log(this.localStorage);  // logs the localStorage of window
+    // console.log(event.currentTarget === this); // logs `false`
+    const apidata = await getApiData();
+    console.log("click loadmore btn 2");
     loadmore(apidata);
 });   
 
@@ -109,6 +119,20 @@ if (btnX) {
     btnX.addEventListener('click', toggleClose);
 }
 
+/*
+btnload.addEventListener('click', onclick1(e)); // error 自定義function 無法接收 Event Object
+const onclick1 = function(e) {  
+    console.log("onclick1");
+    console.log(e); // undefined
+}
+*/
 
+// btnload.addEventListener("click", function(){ 
+//     console.log("click btnload 1"); 
+// });
 
-
+// const handleClick = function() {
+//     console.log("click element.");
+// }
+// btnload.addEventListener("click", handleClick);
+// btnload.addEventListener("click", null);

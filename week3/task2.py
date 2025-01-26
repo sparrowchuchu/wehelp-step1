@@ -5,35 +5,16 @@ import csv
 
 
 def getUrlData(url):
-    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+    headers = {
+            'coolies':'over18=1',
+            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
             AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 \
             Safari/537.36'}
-    cj = cookiejar.CookieJar()
-    # Manually create a cookie and add it to the CookieJar
-    cookie = cookiejar.Cookie(
-        version=0,  # Cookie version (0 means Netscape format)
-        name='over18',
-        value='1',
-        port=None,
-        port_specified=False,
-        domain='www.ptt.cc',
-        domain_specified=True,
-        domain_initial_dot=False,
-        path='/',  # Path of the cookie
-        path_specified=True,
-        secure=False,  # Whether the cookie is secure
-        expires=None,  # Expires (None means session cookie)
-        discard=True,
-        comment=None,
-        comment_url=None,
-        rest={}
-    )
-    cj.set_cookie(cookie)
-    opener = request.build_opener(request.HTTPCookieProcessor(cj))
     try:
         req = request.Request(url, headers = headers)
-        response = opener.open(req)
+        response = request.urlopen(req)
     except error.HTTPError as e:
+        print(response.getcode())
         # print(e)
         pass
     else:
@@ -99,6 +80,5 @@ while page < 4:
 lottery = [[article_title[i], like_count[i], publish_time[i]] for i in range(len(article_title))]
 
 # 3. 輸出資料
-writeCsvFile('article.csv', lottery)
-
+writeCsvFile('article2.csv', lottery)
 

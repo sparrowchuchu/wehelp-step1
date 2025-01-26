@@ -79,7 +79,8 @@ const loadmore = (apidata) =>{
         }
     }
 }
-const toggleDropdown = () =>{
+const toggleDropdown = (e) =>{
+    console.log(e);
     dropOption.style.display = "none";
     dropdown.style.display = "block";
 }
@@ -110,7 +111,10 @@ btnload.addEventListener('click', async(event) => {
     const apidata = await getApiData();
     console.log("click loadmore btn 2");
     loadmore(apidata);
-});   
+}); 
+
+// btnload.addEventListener('click', null);  
+btnload.removeEventListener('click', null);
 
 if (dropOption) {
     dropOption.addEventListener('click', toggleDropdown);
@@ -120,12 +124,13 @@ if (btnX) {
 }
 
 /*
-btnload.addEventListener('click', onclick1(e)); // error 自定義function 無法接收 Event Object
 const onclick1 = function(e) {  
     console.log("onclick1");
     console.log(e); // undefined
 }
+btnload.addEventListener('click', onclick1);
 */
+
 
 // btnload.addEventListener("click", function(){ 
 //     console.log("click btnload 1"); 

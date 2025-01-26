@@ -111,8 +111,7 @@ btnload.addEventListener('click', async(event) => {
     const apidata = await getApiData();
     console.log("click loadmore btn 2");
     loadmore(apidata);
-}); 
-
+});   
 
 if (dropOption) {
     dropOption.addEventListener('click', toggleDropdown);

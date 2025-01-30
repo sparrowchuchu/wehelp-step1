@@ -1,18 +1,45 @@
 
 const getApiData = async () =>{
-    // Here is URL for tourist spots in Taipei provided by Taipei City Government
-    let src = "https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-1";
-    let response = await fetch(src);
-    let data = await response.json();
-    let results = data.data.results;
-    return results;
+    try{
+        // console.log("getApiData");
+        // Here is URL for tourist spots in Taipei provided by Taipei City Government
+        let src = "https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-1";
+        let response = await fetch(src);
+        let data = await response.json();
+        let results = data.data.results;
+        return results;
+    }catch(err){
+        console.log("error: ", err);
+    }
+}
+const saveToSessionStorage = (apidata) =>{
+    // console.log("saveToSessionStorage");
+    apidataStr = JSON.stringify(apidata);
+    console.log('typeof apidataStr: ', typeof apidataStr);
+    sessionStorage.setItem("apidataStr", apidataStr);
+}
+const loadToSessionStorage = () =>{
+    // console.log("loadToSessionStorage");
+    let apidataStr = sessionStorage.getItem("apidataStr");
+    let apidata = JSON.parse(apidataStr);
+    console.log('typeof apidata: ', typeof apidata);
+    return apidata;
+}
+const setApiIndex = (index) =>{
+    // console.log("setApiIndex ", index);
+    sessionStorage.setItem("index", index);
+}
+const getApiIndex = () =>{
+    // console.log("getApiIndex");
+    let index = sessionStorage.getItem("index");
+    return index;
 }
 const setPromoData = (apidata) =>{
-    console.log("setPromoData");
+    // console.log("setPromoData");
     let imgDiv = document.querySelectorAll('.clip-img-s');
-    imgDiv.forEach( async(div, i) => {
-        indexArr[0] = i;
-        let data = apidata[indexArr[0]];
+    imgDiv.forEach( (div) => {
+        let index = Number(getApiIndex());
+        let data = apidata[index];
         let filelist = data.filelist;
         let regex = /https:.+?\.jpg/i;
         let imgUrl = filelist.match(regex)[0];
@@ -24,14 +51,15 @@ const setPromoData = (apidata) =>{
         newImg.width = 80;
         div.appendChild(newImg);
         div.parentNode.insertBefore(newH4, div.nextSibling);
+        setApiIndex(index + 1);
     })
 }
 const setItemData = (apidata) =>{
-    console.log("setItemData");
+    // console.log("setItemData");
     let item = document.querySelectorAll('.item');
-    item.forEach( async(div) => {
-        indexArr[0] += 1;
-        let data = apidata[indexArr[0]];
+    item.forEach( (div) => {
+        let index =  Number(getApiIndex());
+        let data = apidata[index];
         let filelist = data.filelist;
         let regex = /https:.+?\.jpg/i;
         let imgUrl = filelist.match(regex)[0];
@@ -44,14 +72,15 @@ const setItemData = (apidata) =>{
         newDiv.appendChild(title);
         div.appendChild(newImg);
         div.appendChild(newDiv);
-    })
+        setApiIndex(index + 1);
+    });
 }
 const loadmore = (apidata) =>{
-    console.log("loadmore");
+    // console.log("loadmore");
     for(let i = 0; i < 10; i++){
-        indexArr[0] += 1;
+        let index =  Number(getApiIndex());
         let section = document.querySelector('.box-b');
-        let data = apidata[indexArr[0]];
+        let data = apidata[index];
         let filelist = data.filelist;
         let regex = /https:.+?\.jpg/i;
         let imgUrl = filelist.match(regex)[0];
@@ -73,10 +102,11 @@ const loadmore = (apidata) =>{
         newParentDiv.appendChild(newImg);
         newParentDiv.appendChild(newDiv);
         section.insertBefore(newParentDiv, null);
-        if (indexArr[0] > (apidata.length - 2)){
+        if (index > (apidata.length - 2)){
             btnload.style.display = "none";
             break
         }
+        setApiIndex(index + 1);
     }
 }
 const toggleDropdown = () =>{
@@ -95,44 +125,25 @@ const dropdown = document.querySelector('.dropdown');
 const btnX = document.querySelector('.btn-x');
 
 window.addEventListener('load', async(event) => {
-    // console.log(event.currentTarget);  // window
-    // console.log(this.localStorage);  // logs the localStorage of window
-    // console.log(event.currentTarget === this); // logs `true`
-    const apidata = await getApiData();
+    setApiIndex(0);
+    if(!sessionStorage.getItem("apidataStr")){
+        let apidata = await getApiData();
+        saveToSessionStorage(apidata);
+    }
+    let apidata = loadToSessionStorage();
     setPromoData(apidata);
     setItemData(apidata);
+    btnload.addEventListener('click', (event) => {
+        console.log("click loadmore btn");
+        console.log('typeof apidata: ', typeof apidata);
+        loadmore(apidata);
+    });  
 }); 
 
-btnload.addEventListener('click', async(event) => {
-    // console.log(event.currentTarget);  // btnload element
-    // console.log(this.localStorage);  // logs the localStorage of window
-    // console.log(event.currentTarget === this); // logs `false`
-    const apidata = await getApiData();
-    console.log("click loadmore btn 2");
-    loadmore(apidata);
-});   
+dropOption.addEventListener('click', toggleDropdown);
+btnX.addEventListener('click', toggleClose);
 
-if (dropOption) {
-    dropOption.addEventListener('click', toggleDropdown);
-}
-if (btnX) {
-    btnX.addEventListener('click', toggleClose);
-}
 
-/*
-btnload.addEventListener('click', onclick1(e)); // error 自定義function 無法接收 Event Object
-const onclick1 = function(e) {  
-    console.log("onclick1");
-    console.log(e); // undefined
-}
-*/
 
-// btnload.addEventListener("click", function(){ 
-//     console.log("click btnload 1"); 
-// });
 
-// const handleClick = function() {
-//     console.log("click element.");
-// }
-// btnload.addEventListener("click", handleClick);
-// btnload.addEventListener("click", null);
+

@@ -57,7 +57,7 @@ h4{font-weight: normal;}
     overflow: hidden;
 }
 .clip-img-s img{
-    width: 100%;height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
 }
 
@@ -79,7 +79,7 @@ h4{font-weight: normal;}
 }
 
 .item-img{
-    width: 100%;height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
 }
 .item-title{

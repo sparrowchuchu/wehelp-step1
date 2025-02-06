@@ -4,8 +4,14 @@ const getApiData = async () =>{
         // console.log("getApiData");
         // Here is URL for tourist spots in Taipei provided by Taipei City Government
         let src = "https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-1";
-        let response = await fetch(src);
-        let data = await response.json();
+        let response = await fetch(src);  // 回傳promise
+        let data = await response.json();  // 回傳promise
+        //  以上兩行 code 等於以下註解
+        /*
+        let data = await fetch(src).then( (response) => {
+            return response.json();
+        });
+        */
         let results = data.data.results;
         return results;
     }catch(err){

@@ -38,21 +38,25 @@ footer{height: 250px;}
 .info-box{
     max-width: 370px; min-height: 100px;
     margin: 16px auto;
-    align-items:center;
+    align-items:center;  
+}
+.info-box> div{
+    margin: 10px auto;  
 }
 
-.form> *{
+.data-form> *{
     margin: 15px;
     display:flex;
     justify-content:center;
     align-items:center;
 }
-.form> div> label{padding-right: 10px;}
+.data-form> div> label{padding-right: 10px;}
 
 
 /* feature */
 .center{
     display:flex;
+    flex-direction: column;
     justify-content:center;
     align-items:center;
 }

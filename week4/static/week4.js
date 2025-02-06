@@ -12,12 +12,13 @@ if (signin){
 
 let numInput= document.querySelector('#num')
 let submitBtn= document.querySelector('#submit-btn')
-
 if (numInput && submitBtn){
-    submitBtn.addEventListener('click', function(value){
-        let num= numInput.value;
-        url = "/square/"  + num;
+    submitBtn.addEventListener('click', function(){
+        let num = numInput.value;
+        url = "/square/" + num;
         window.location.replace(url);
     });
 }
+
+console.log("week4.js loaded");
 

@@ -19,4 +19,6 @@ Complete at least 3 tasks to get passed (There are 4 tasks, and 2 are optional.)
 
 ## Assignment - Week 4
 Build a website by Python FastAPI with Jinja2 template engine. Complete a simple verification system.
+- Python FastAPI
+- Jinja2
 

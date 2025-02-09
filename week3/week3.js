@@ -24,8 +24,8 @@ const saveToSessionStorage = (apidata) =>{
     console.log('typeof apidataStr: ', typeof apidataStr);
     sessionStorage.setItem("apidataStr", apidataStr);
 }
-const loadToSessionStorage = () =>{
-    // console.log("loadToSessionStorage");
+const loadFromSessionStorage = () =>{
+    // console.log("loadFromSessionStorage");
     let apidataStr = sessionStorage.getItem("apidataStr");
     let apidata = JSON.parse(apidataStr);
     return apidata;
@@ -124,7 +124,6 @@ const toggleClose = () =>{
     dropdown.style.display = "none";
 }
 
-const indexArr = [0];
 const btnload = document.querySelector('#loadmore');
 const dropOption = document.querySelector('.dropOption');
 const dropdown = document.querySelector('.dropdown');
@@ -136,7 +135,7 @@ window.addEventListener('load', async(event) => {
         let apidata = await getApiData();
         saveToSessionStorage(apidata);
     }
-    let apidata = loadToSessionStorage();
+    let apidata = loadFromSessionStorage();
     setPromoData(apidata);
     setItemData(apidata);
     btnload.addEventListener('click', (event) => {

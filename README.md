@@ -22,3 +22,5 @@ Build a website by Python FastAPI with Jinja2 template engine. Complete a simple
 - Python FastAPI
 - Jinja2
 
+## Assignment - Week 5
+use SQL statements to manage data in MySQL.

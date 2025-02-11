@@ -125,7 +125,29 @@ LIMIT 2;
 ### 5-1. 使用要操作的資料庫  
 `USE 資料庫名稱` 
 ### 5-2. 建立資料表  
-`CREATE TABLE 資料表名稱(欄位名稱 資料類型 [欄位屬性清單],...)`
+```
+CREATE TABLE 資料表名稱1(
+	欄位名稱 資料類型 [欄位屬性清單],
+	...,
+	FOREIGN KEY (欄位名稱) REFERENCES 資料表名稱2(欄位名稱)
+)
+```
+#### 鍵 KEY
+1. PRIMARY KEY （PK）  
+	- 唯一（UNIQUE）
+	- 非空（NOT NULL）  
+	- 複合鍵（Compound Key）應用在主鍵  
+	```
+	CREATE TABLE order_items (
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    PRIMARY KEY (order_id, product_id)
+	);
+	```
+2. FOREIGN KEY（FK）  
+	- 参照完整性: 外鍵的值來自引用鍵的值，兩者必須有相似的資料型別。
+	- 外鍵約束: 外鍵可以確保資料的一致性和完整性。
 ```
 USE website;
 CREATE TABLE message(

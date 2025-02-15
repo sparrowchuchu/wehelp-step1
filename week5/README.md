@@ -9,6 +9,7 @@
 
 ![alt text](img/run_mysql.png)
 
+
 ## 2. Task2
 ### 2-1. 建立資料庫  
 `CREATE DATABASE 資料庫名稱` 
@@ -30,8 +31,9 @@ CREATE TABLE member(
 ```
 ![alt text](img/task2.png)
 
+
 ## 3. Task3
-### 3-1. 新增資料表紀錄  
+### 3-1. 新增紀錄到資料表  
 `INSERT [INTO] 資料表 [(欄位名稱, 欄位名稱, 欄位名稱) VALUES(欄位值,欄位值,欄位值)]`
 ```
 INSERT INTO member (name, username, password)
@@ -73,7 +75,7 @@ VALUES ('Alice', 'alice123', 'password1', 50),
 `SELECT * FROM Employees WHERE NOT Age = 30;`
 
 #### ORDER BY 子句
-1. 欄位降續排序（DESC），默認是升序（ASC）。  
+1. 欄位降序排序（DESC），默認是升序（ASC）。  
 `SELECT Name, Age FROM Employees ORDER BY Age DESC`
 2. 限制排序後的結果數量（LIMIT）  
 `SELECT * FROM member ORDER BY time DESC LIMIT 3 OFFSET 1`  
@@ -104,13 +106,14 @@ SET SQL_SAFE_UPDATES=1;
 ```
 ![alt text](img/task3-3.png)
 
+
 ## 4. Task4
 ### 使用聚合函數計算
 1. 計數 COUNT( )  
 2. 求和 SUM( )  
 3. 平均值 AVG( )
 4. 最大值 MAX( )
-5. 最小值 MIN()
+5. 最小值 MIN( )
 ```
 SELECT COUNT(*) FROM member;
 SELECT SUM(follower_count) FROM member;
@@ -120,6 +123,7 @@ ORDER BY follower_count DESC
 LIMIT 2;
 ```
 ![alt text](img/task4.png)
+
 
 ## 5. Task5 
 ### 5-1. 使用要操作的資料庫  
@@ -215,8 +219,9 @@ GROUP BY mem.username;
 `Ctrl`+`Z`  
 ![alt text](img/exit_mysql.png)
 
+
 ## 7. Backup Database 
-### 執行 mysqldump -u 使用者名稱 -p  資料庫名稱 > 備份路徑.sql
+### 執行 mysqldump -u 使用者名稱 -p  資料庫名稱 > 備份路徑\檔案名稱.sql
 `mysqldump -u root -p website > C:\1_JsData\wehelp\wehelp-step1\week5\data.sql`
 
 ![alt text](img/backup_database.png)

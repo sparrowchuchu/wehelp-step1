@@ -1,3 +1,11 @@
+function delConfirm(){
+    let result = confirm("確定要刪除嗎?");
+    if (result){
+        return true;
+    }
+    return false;
+}
+
 function validataForm(){
     let name = document.querySelector("#signup-name").value;
     let username = document.querySelector("#signup-username").value;
@@ -13,7 +21,6 @@ function validataForm(){
     }
     return true;  // Allow form submission
 }
-
 
 const signin = document.querySelector('#signin-form');
 if (signin){

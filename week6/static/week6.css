@@ -19,6 +19,9 @@ header{
     margin-bottom: 20px;
 }
 
+ul{margin: 0px; padding: 0px;}
+li{list-style: none; text-align: center;}
+
 main{
     max-width: 1200px;
     margin: 0 auto;
@@ -70,3 +73,4 @@ footer{height: 250px;}
     background-color: rgb(61, 81, 110);
 }
 
+.display-inline{display: inline;}

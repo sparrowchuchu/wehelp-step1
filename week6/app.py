@@ -65,11 +65,10 @@ async def signin(
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM members WHERE username = '{username}' AND password = '{password}'")
+        cursor.execute(f"SELECT * FROM members WHERE username = '{username}' AND password = '{password}';")
         existing_user = cursor.fetchone()
         cursor.close()
         conn.close()
-
         if existing_user:
             request.session['SIGNED_IN'] = True
             request.session['MEMBER_ID'] = existing_user[0]
@@ -77,10 +76,10 @@ async def signin(
             request.session['NAME'] = existing_user[1]
             return RedirectResponse("/member", status_code = 302)
         else:
-            message="Username or password is not correct."
+            message="Incorrect Username or Password."
             return RedirectResponse(f"/error?message={message}", status_code = 302)
     except Exception as e:
-        message="Username or password is not correct. err102"
+        message="Incorrect Username or Password. err102"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 
 @app.get("/signout", response_class=HTMLResponse)
@@ -108,18 +107,68 @@ async def member(request: Request):
     title = "會員頁面"
     info_title = "歡迎光臨，這是會員頁"
     message = f"{name}，歡迎登入系統"
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT mes.id, mes.member_id, mes.content, mem.name\
+            FROM messages mes\
+            JOIN members mem\
+            ON mes.member_id = mem.id\
+            ORDER BY mes.time DESC;"
+            )
+        contents = cursor.fetchall()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        message="An error occurred while reading the message. err103"
+        return RedirectResponse(f"/error?message={message}", status_code = 302)
     return templates.TemplateResponse(request = request, name = "member.html", 
                                       context = {"title":title ,
                                                  "info_title":info_title,
                                                  "message": message,
                                                  "link": "/signout",
-                                                 "link_message": "登出系統"
+                                                 "link_message": "登出系統",
+                                                 "name": name,
+                                                 "contents": contents
                                                  })
 
-@app.get("/createMessage", response_class=HTMLResponse)
-async def createMessage(request: Request):
+@app.post("/createMessage", response_class=HTMLResponse)
+async def createMessage(
+    request: Request,
+    createMessage: Annotated[str, Form()],
+    ):
     if request.session.get("SIGNED_IN") != True:
         return RedirectResponse(url="/", status_code=302)
-    username = request.session['USERNAME']
-
+    member_id = request.session['MEMBER_ID']
+    content = createMessage
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(f"INSERT INTO messages(member_id, content) VALUES('{member_id}', '{content}');")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return RedirectResponse("/member", status_code=302)
+    except Exception as e:
+        message="Create Message Error. err104"
+        return RedirectResponse(f"/error?message={message}", status_code = 302)
+    
+@app.post("/deleteMessage", response_class=HTMLResponse)
+async def deleteMessage(
+    request: Request,
+    messageId: Annotated[str, Form()],
+    ):
+    if request.session.get("SIGNED_IN") != True:
+        return RedirectResponse(url="/", status_code=302)
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(f"DELETE FROM messages WHERE id='{messageId}';")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return RedirectResponse("/member", status_code=302)
+    except Exception as e:
+        message="Delete Message Error. err105"
+        return RedirectResponse(f"/error?message={message}", status_code = 302)
 

@@ -17,19 +17,32 @@
             <div>
                 <a href="{{ link }}">{{ link_message }}</a>
             </div>
-            <form class="data-form" id="signin-form" action="/createMessage" method="POST">
+        </div>
+        <div class="info-box center">
+            <form class="data-form" id="create-message-form" action="/createMessage" method="POST">
                 <h4>快來留言吧</h4>
                 <div>
-                    <label for="createMessage">內容</label>
-                    <input type="text" id="createMessage" name="createMessage" required>
+                    <label for="create-message">內容</label>
+                    <input type="text" id="create-message" name="createMessage" required>
                 </div>
                 <div>
                     <button type="submit">送出</button>
                 </div>
             </form>
-            <div>
-                {{ jinja forloop}}
-            </div>
+        </div>
+        <div class="info-box center">
+            <ul >
+            {% for content in contents %}
+                <li><b>{{ content[3] }}</b> : {{ content[2] }}
+                    {% if content[3] == name %}
+                    <form class="display-inline" action="/deleteMessage" method="post" onsubmit="return delConfirm()">
+                        <input type="hidden" name="messageId" value="{{ content[0] }}">
+                        <button type="submit">X</button>
+                    </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
         </div>
     </div>
     <footer></footer>

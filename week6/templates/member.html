@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/week6.css">
+    <script src="/static/week6.js" defer></script>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <nav></nav>
+    <header></header>
+    <div class="box">
+        <div class="sub-title center">{{ info_title }}</div>
+        <div class="info-box center">
+            <div>{{ message }}</div>
+            <div>
+                <a href="{{ link }}">{{ link_message }}</a>
+            </div>
+            <form class="data-form" id="signin-form" action="/createMessage" method="POST">
+                <h4>快來留言吧</h4>
+                <div>
+                    <label for="createMessage">內容</label>
+                    <input type="text" id="createMessage" name="createMessage" required>
+                </div>
+                <div>
+                    <button type="submit">送出</button>
+                </div>
+            </form>
+            <div>
+                {{ jinja forloop}}
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+</body>
+</html>
+
+

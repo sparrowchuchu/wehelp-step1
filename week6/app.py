@@ -1,3 +1,5 @@
+import bcrypt
+import mysql.connector
 from typing import Annotated
 from fastapi import FastAPI, Form, Path, Request
 from fastapi.responses import HTMLResponse
@@ -5,7 +7,6 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-import mysql.connector
 
 app = FastAPI()
 
@@ -39,21 +40,26 @@ async def signup(
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM members WHERE username = '{username}';")
+        cursor.execute("SELECT * FROM members WHERE username = %s;", (username,))
         existing_user = cursor.fetchone()
         if existing_user:
             cursor.close()
             conn.close()
-            message="Repeated username."
+            message = "Repeated username."
             return RedirectResponse(f"/error?message={message}", status_code = 302)
-        else:
-            cursor.execute(f"INSERT INTO members(name, username, password) VALUES('{name}', '{username}', '{password}');")
-            conn.commit()
-            cursor.close()
-            conn.close()
-            return RedirectResponse("/", status_code=302)
+        # Hash the password before saving
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        # Insert the new user with hashed password
+        cursor.execute(
+            "INSERT INTO members(name, username, password) VALUES(%s, %s, %s);", 
+            (name, username, hashed_password.decode('utf-8'))
+        )   
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return RedirectResponse("/", status_code=302)
     except Exception as e:
-        message="Repeated username. err101"
+        message=f"Repeated username. {str(e)}"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     
 @app.post("/signin", response_class=HTMLResponse)
@@ -65,21 +71,23 @@ async def signin(
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM members WHERE username = '{username}' AND password = '{password}';")
+        cursor.execute("SELECT * FROM members WHERE username = %s;", (username,))
         existing_user = cursor.fetchone()
         cursor.close()
         conn.close()
         if existing_user:
-            request.session['SIGNED_IN'] = True
-            request.session['MEMBER_ID'] = existing_user[0]
-            request.session['USERNAME'] = existing_user[2]
-            request.session['NAME'] = existing_user[1]
-            return RedirectResponse("/member", status_code = 302)
-        else:
-            message="Incorrect Username or Password."
-            return RedirectResponse(f"/error?message={message}", status_code = 302)
+            stored_hash = existing_user[3]
+            if bcrypt.checkpw(password.encode('utf-8'), stored_hash.encode('utf-8')):
+                request.session['SIGNED_IN'] = True
+                request.session['MEMBER_ID'] = existing_user[0]
+                request.session['USERNAME'] = existing_user[2]
+                request.session['NAME'] = existing_user[1]
+                return RedirectResponse("/member", status_code = 302)
+            else:
+                message = "Incorrect Username or Password."
+                return RedirectResponse(f"/error?message={message}", status_code = 302)
     except Exception as e:
-        message="Incorrect Username or Password. err102"
+        message = f"Incorrect Username or Password. {str(e)}"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 
 @app.get("/signout", response_class=HTMLResponse)
@@ -110,11 +118,11 @@ async def member(request: Request):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT mes.id, mes.member_id, mes.content, mem.name\
-            FROM messages mes\
-            JOIN members mem\
-            ON mes.member_id = mem.id\
-            ORDER BY mes.time DESC;"
+        cursor.execute('''SELECT mes.id, mes.member_id, mes.content, mem.name\
+            FROM messages mes
+            JOIN members mem
+            ON mes.member_id = mem.id
+            ORDER BY mes.time DESC;'''
             )
         contents = cursor.fetchall()
         cursor.close()
@@ -144,13 +152,13 @@ async def createMessage(
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"INSERT INTO messages(member_id, content) VALUES('{member_id}', '{content}');")
+        cursor.execute("INSERT INTO messages(member_id, content) VALUES(%s, %s);", (member_id, content))
         conn.commit()
         cursor.close()
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
-        message="Create Message Error. err104"
+        message = f"Create Message Error. {str(e)}"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     
 @app.post("/deleteMessage", response_class=HTMLResponse)
@@ -163,12 +171,12 @@ async def deleteMessage(
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"DELETE FROM messages WHERE id='{messageId}';")
+        cursor.execute("DELETE FROM messages WHERE id = %s;", (messageId,))
         conn.commit()
         cursor.close()
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
-        message="Delete Message Error. err105"
+        message = f"Delete Message Error.{str(e)}"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 

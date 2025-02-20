@@ -59,7 +59,7 @@ async def signup(
         conn.close()
         return RedirectResponse("/", status_code=302)
     except Exception as e:
-        message = f"An unexpected error occurred: 101"
+        message = "An unexpected error occurred: 101"
         return RedirectResponse(f"/error?message={message}", status_code=302)
     
 @app.post("/signin", response_class=HTMLResponse)
@@ -87,7 +87,7 @@ async def signin(
                 message = "Incorrect Username or Password."
                 return RedirectResponse(f"/error?message={message}", status_code = 302)
     except Exception as e:
-        message = f"Incorrect Username or Password. 102"
+        message = "Incorrect Username or Password. 102"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 
 @app.get("/signout", response_class=HTMLResponse)
@@ -158,7 +158,7 @@ async def createMessage(
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
-        message = f"Create Message Error. 103"
+        message = "Create Message Error. 103"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     
 @app.post("/deleteMessage", response_class=HTMLResponse)
@@ -179,6 +179,6 @@ async def deleteMessage(
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
-        message = f"Delete Message Error. 104"
+        message = "Delete Message Error. 104"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 

@@ -59,8 +59,8 @@ async def signup(
         conn.close()
         return RedirectResponse("/", status_code=302)
     except Exception as e:
-        message=f"Repeated username. {str(e)}"
-        return RedirectResponse(f"/error?message={message}", status_code = 302)
+        message = f"An unexpected error occurred: 101"
+        return RedirectResponse(f"/error?message={message}", status_code=302)
     
 @app.post("/signin", response_class=HTMLResponse)
 async def signin(
@@ -87,12 +87,12 @@ async def signin(
                 message = "Incorrect Username or Password."
                 return RedirectResponse(f"/error?message={message}", status_code = 302)
     except Exception as e:
-        message = f"Incorrect Username or Password. {str(e)}"
+        message = f"Incorrect Username or Password. 102"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 
 @app.get("/signout", response_class=HTMLResponse)
 async def signout(request: Request):
-    request.session["SIGNED_IN"] = False
+    request.session.clear()
     return RedirectResponse("/", status_code=302)
 
 @app.get("/error", response_class=HTMLResponse)
@@ -158,7 +158,7 @@ async def createMessage(
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
-        message = f"Create Message Error. {str(e)}"
+        message = f"Create Message Error. 103"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     
 @app.post("/deleteMessage", response_class=HTMLResponse)
@@ -168,15 +168,17 @@ async def deleteMessage(
     ):
     if request.session.get("SIGNED_IN") != True:
         return RedirectResponse(url="/", status_code=302)
+    
+    member_id = request.session['MEMBER_ID']
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM messages WHERE id = %s;", (messageId,))
+        cursor.execute("DELETE FROM messages WHERE id = %s AND member_id = %s;", (messageId, member_id))
         conn.commit()
         cursor.close()
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
-        message = f"Delete Message Error.{str(e)}"
+        message = f"Delete Message Error. 104"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 

@@ -118,7 +118,7 @@ async def member(request: Request):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('''SELECT mes.id, mes.member_id, mes.content, mem.name\
+        cursor.execute('''SELECT mes.id, mes.member_id, mes.content, mem.name
             FROM messages mes
             JOIN members mem
             ON mes.member_id = mem.id

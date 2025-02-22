@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="info-box center">
-            <form class="data-form" id="create-message-form" action="/createMessage" method="POST">
+            <form class="data-form" action="/createMessage" method="POST">
                 <h4>快來留言吧</h4>
                 <div>
                     <label for="create-message">內容</label>
@@ -29,6 +29,7 @@
                     <button type="submit">送出</button>
                 </div>
             </form>
+            <div>{{ hint }}</div>
         </div>
         <div class="info-box center">
             <ul >

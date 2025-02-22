@@ -1,3 +1,4 @@
+import re
 import bcrypt
 import mysql.connector
 from typing import Annotated
@@ -25,6 +26,23 @@ def get_db_connection():
         database = "website"
     )
 
+def validate_member(name, username, password):
+    name_regex = r'^[a-zA-Z0-9_]{3,15}$'
+    username_regex = r'^[a-zA-Z0-9_]{3,15}$'
+    password_regex = r'^[a-zA-Z0-9_]{8,50}$'
+    if not re.match(name_regex, name, flags=re.M):
+        return False
+    if not re.match(username_regex, username, flags=re.M):
+        return False
+    if not re.match(password_regex, password, flags=re.M):
+        return False
+    return True
+
+def validate_message(content: str) -> bool:
+    message_regex = r'^[\u4e00-\u9fa5A-Za-z0-9\s\.,!?-]{3,200}$'
+    return bool(re.match(message_regex, content, flags=re.M))
+
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     info_title = "歡迎光臨，請註冊登入系統"
@@ -37,6 +55,9 @@ async def signup(
     username: Annotated[str, Form()], 
     password: Annotated[str, Form()]
     ):
+    if not validate_member(name, username, password):
+        message = f"An unexpected error occurred: 105"
+        return RedirectResponse(f"/error?message={message}", status_code=302)
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -45,11 +66,11 @@ async def signup(
         if existing_user:
             cursor.close()
             conn.close()
-            message = "Repeated username."
+            message = "Repeated Username."
             return RedirectResponse(f"/error?message={message}", status_code = 302)
-        # Hash the password before saving
+
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        # Insert the new user with hashed password
+
         cursor.execute(
             "INSERT INTO members(name, username, password) VALUES(%s, %s, %s);", 
             (name, username, hashed_password.decode('utf-8'))
@@ -108,7 +129,7 @@ async def error(request: Request, message: str = None):
                                                  })
 
 @app.get("/member", response_class=HTMLResponse)
-async def member(request: Request):
+async def member(request: Request, hint: str = ""):
     if request.session.get("SIGNED_IN") != True:
         return RedirectResponse(url="/", status_code=302)
     name = request.session['NAME']
@@ -136,6 +157,7 @@ async def member(request: Request):
                                                  "message": message,
                                                  "link": "/signout",
                                                  "link_message": "登出系統",
+                                                 "hint": hint,
                                                  "name": name,
                                                  "contents": contents
                                                  })
@@ -147,12 +169,15 @@ async def createMessage(
     ):
     if request.session.get("SIGNED_IN") != True:
         return RedirectResponse(url="/", status_code=302)
+    if not validate_message(createMessage):
+        hint = "留言至少要輸入 3 個文字"
+        return RedirectResponse(f"/member?hint={hint}", status_code=302)
+    
     member_id = request.session['MEMBER_ID']
-    content = createMessage
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO messages(member_id, content) VALUES(%s, %s);", (member_id, content))
+        cursor.execute("INSERT INTO messages(member_id, content) VALUES(%s, %s);", (member_id, createMessage))
         conn.commit()
         cursor.close()
         conn.close()

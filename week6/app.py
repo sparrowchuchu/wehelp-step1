@@ -30,17 +30,17 @@ def validate_member(name, username, password):
     name_regex = r'^[a-zA-Z0-9_]{3,15}$'
     username_regex = r'^[a-zA-Z0-9_]{3,15}$'
     password_regex = r'^[a-zA-Z0-9_]{8,50}$'
-    if not re.match(name_regex, name, flags=re.M):
+    if not re.match(name_regex, name):
         return False
-    if not re.match(username_regex, username, flags=re.M):
+    if not re.match(username_regex, username):
         return False
-    if not re.match(password_regex, password, flags=re.M):
+    if not re.match(password_regex, password):
         return False
     return True
 
 def validate_message(content: str) -> bool:
     message_regex = r'^[\u4e00-\u9fa5A-Za-z0-9\s\.,!?-]{3,200}$'
-    return bool(re.match(message_regex, content, flags=re.M))
+    return bool(re.match(message_regex, content))
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -80,9 +80,11 @@ async def signup(
         conn.close()
         return RedirectResponse("/", status_code=302)
     except Exception as e:
+        conn.close()
+        print(str(e))
         message = f"An unexpected error occurred: 101"
         return RedirectResponse(f"/error?message={message}", status_code=302)
-    
+ 
 @app.post("/signin", response_class=HTMLResponse)
 async def signin(
     request: Request,
@@ -108,6 +110,8 @@ async def signin(
                 message = "Incorrect Username or Password."
                 return RedirectResponse(f"/error?message={message}", status_code = 302)
     except Exception as e:
+        conn.close()
+        print(str(e))
         message = f"Incorrect Username or Password. 102"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 
@@ -149,6 +153,8 @@ async def member(request: Request, hint: str = ""):
         cursor.close()
         conn.close()
     except Exception as e:
+        conn.close()
+        print(str(e))
         message="An error occurred while reading the message. err103"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     return templates.TemplateResponse(request = request, name = "member.html", 
@@ -183,6 +189,8 @@ async def createMessage(
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
+        conn.close()
+        print(str(e))
         message = f"Create Message Error. 103"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     
@@ -204,6 +212,8 @@ async def deleteMessage(
         conn.close()
         return RedirectResponse("/member", status_code=302)
     except Exception as e:
+        conn.close()
+        print(str(e))
         message = f"Delete Message Error. 104"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
 

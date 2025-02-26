@@ -27,17 +27,17 @@ def get_db_connection():
         database = "website"
     )
 
-def validate_member(name: str, username: str, password: str):
+def validate_name(name: str) -> bool:
     name_regex = r'^[\u4e00-\u9fa5a-zA-Z0-9_]{3,15}$'
+    return bool(re.match(name_regex, name))
+
+def validate_username(username: str) -> bool:
     username_regex = r'^[a-zA-Z0-9_]{3,15}$'
+    return bool(re.match(username_regex, username))
+
+def validate_password(password: str) -> bool:
     password_regex = r'^[a-zA-Z0-9_]{6,50}$'
-    if not re.match(name_regex, name):
-        return False
-    if not re.match(username_regex, username):
-        return False
-    if not re.match(password_regex, password):
-        return False
-    return True
+    return bool(re.match(password_regex, password))
 
 def validate_message(content: str) -> bool:
     message_regex = r'^[\u4e00-\u9fa5A-Za-z0-9\s\.,!?-]{3,200}$'
@@ -56,7 +56,7 @@ async def signup(
     username: Annotated[str, Form()], 
     password: Annotated[str, Form()]
     ):
-    if not validate_member(name, username, password):
+    if not(validate_name(name) and validate_username(username) and validate_password(password)):
         message = f"An unexpected error occurred: 105"
         return RedirectResponse(f"/error?message={message}", status_code=303)
     try:
@@ -170,7 +170,6 @@ async def member(request: Request, hintInfo: str = ""):
 
 @app.get("/api/member")
 async def query_member(request: Request, username: str):
-    # print(request.session)
     if request.session.get("SIGNED_IN") != True:
         return RedirectResponse(url="/")
     try:
@@ -201,10 +200,20 @@ async def update_name(request: Request, name: dict):
         return RedirectResponse(url="/")
     member_id = request.session['MEMBER_ID']
     new_name = name.get("name")
-    if not validate_member(name):
-        print("XXX")
-    print("OK")
-
+    if not validate_name(new_name):
+        return JSONResponse(content={"error": True})
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE members SET name = %s WHERE id = %s;", (new_name, member_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return JSONResponse(content={"ok": True})
+    except Exception as e:
+        conn.close()
+        print(f"Error updating name: {str(e)}")
+        return JSONResponse(content={"error": True})
 
 @app.post("/createMessage", response_class=HTMLResponse)
 async def createMessage(

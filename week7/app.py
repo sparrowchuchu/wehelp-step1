@@ -82,7 +82,7 @@ async def signup(
         return RedirectResponse("/", status_code=303)
     except Exception as e:
         conn.close()
-        print(str(e))
+        # print(str(e))
         message = f"An unexpected error occurred: 101"
         return RedirectResponse(f"/error?message={message}", status_code=303)
 
@@ -112,6 +112,7 @@ async def signin(
                 return RedirectResponse(f"/error?message={message}", status_code = 303)
     except Exception as e:
         conn.close()
+        # print(str(e))
         message = f"Incorrect Username or Password. 102"
         return RedirectResponse(f"/error?message={message}", status_code = 303)
 
@@ -154,7 +155,7 @@ async def member(request: Request, hintInfo: str = ""):
         conn.close()
     except Exception as e:
         conn.close()
-        print(str(e))
+        # print(str(e))
         message="An error occurred while reading the message. err103"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     return templates.TemplateResponse(request = request, name = "member.html", 
@@ -191,7 +192,7 @@ async def query_member(request: Request, username: str):
         return JSONResponse(content = response_data)
     except Exception as e:
         conn.close()
-        print(f"Error: {str(e)}")
+        # print(str(e))
         return JSONResponse(content = {"data": None})
 
 @app.patch("/api/member")
@@ -212,7 +213,7 @@ async def update_name(request: Request, name: dict):
         return JSONResponse(content={"ok": True})
     except Exception as e:
         conn.close()
-        print(f"Error updating name: {str(e)}")
+        # print(str(e))
         return JSONResponse(content={"error": True})
 
 @app.post("/createMessage", response_class=HTMLResponse)
@@ -237,6 +238,7 @@ async def createMessage(
         return RedirectResponse("/member", status_code=303)
     except Exception as e:
         conn.close()
+        # print(str(e))
         message = f"Create Message Error. 103"
         return RedirectResponse(f"/error?message={message}", status_code = 303)
     
@@ -259,6 +261,7 @@ async def deleteMessage(
         return RedirectResponse("/member", status_code=303)
     except Exception as e:
         conn.close()
+        # print(str(e))
         message = f"Delete Message Error. 104"
         return RedirectResponse(f"/error?message={message}", status_code = 303)
 

@@ -118,5 +118,3 @@ if (signin){
     });
 }
 
-// console.log("week6.js loaded");
-

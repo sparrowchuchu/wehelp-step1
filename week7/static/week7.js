@@ -1,3 +1,61 @@
+document.querySelector("#updateNameBtn").addEventListener("click", function(){
+    let updateName = document.querySelector("#updateName").value;
+    let result = document.querySelector("#updateNameResult");
+    if(!updateName) {
+        result.innerHTML = "請輸入新的姓名";
+    }
+
+    fetch("/api/member", {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: updateName })
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        if (data.data) {
+            result.innerHTML = `${data.data.name}(${data.data.username})`;
+        } else {
+            result.innerHTML = "沒有這個使用者";
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching member data:", error);
+        result.innerHTML = "請稍後在試";
+    });
+
+});
+
+document.querySelector("#queryNameBtn").addEventListener("click", function(){
+    let queryName = document.querySelector("#queryName").value;
+    let result = document.querySelector("#queryNameResult");
+    if (!queryName) {
+        result.innerHTML = "請輸入會員的Username";
+    }
+
+    fetch(`/api/member?username=${queryName}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+    .then(response => response.json()) 
+    .then(data => {
+        if (data.data) {
+            result.innerHTML = `${data.data.name}(${data.data.username})`;
+        } else {
+            result.innerHTML = "沒有這個使用者";
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching member data:", error);
+        result.innerHTML = "請稍後在試";
+    });
+});
+
+
+
 function delConfirm(){
     let result = confirm("確定要刪除嗎?");
     if (result){
@@ -12,7 +70,7 @@ function validataForm(){
     let username = signupForm.username.value;
     let password = signupForm.password.value;
     let checkbox = signupForm.terms;
-    let nameRegex = /^[\u4e00-\u9fa5a-zA-Z0-9_]{3,15}/;
+    let nameRegex = /^[a-zA-Z0-9_]{3,15}$/;
     let usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
     let passwordRegex = /^[a-zA-Z0-9_]{6,50}$/;
     if (name == "" || username == "" || password == "") {

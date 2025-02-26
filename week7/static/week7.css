@@ -1,0 +1,85 @@
+
+body{
+    margin:0px; padding:0px;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans', Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+}
+
+nav{
+    height: 30px;
+    margin:20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header{
+    height: 250px;
+    margin-bottom: 20px;
+}
+
+ul{margin: 0px; padding: 0px;}
+li{list-style: none; text-align: center;}
+
+main{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+footer{height: 250px;}
+
+
+.box{
+    max-width: 370px;
+    margin: auto;
+    padding: 2rem auto;
+    border: 1px solid #ddd;
+}
+
+.info-box{
+    max-width: 370px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-top: 1px solid #ddd;
+}
+
+.info-box> div{
+    margin: 10px auto;  
+}
+
+.data-form> *{
+    margin: 15px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.data-form> div> label{padding-right: 10px;}
+.data-form> div> input{
+    height: 16px;
+    margin-right: 4px; 
+    padding: 5px;
+}
+.data-form> div> button{
+    height: 30px;
+    padding: 5px;
+}
+
+
+/* feature */
+.center{
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items:center;
+}
+
+.sub-title{
+    height: 80px;
+    color: white;
+    font-size: 1.5rem; font-weight: 900;
+    background-color: rgb(61, 81, 110);
+}
+
+.display-inline{display: inline;}

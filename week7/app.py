@@ -3,6 +3,7 @@ import bcrypt
 import mysql.connector
 from typing import Annotated
 from fastapi import FastAPI, Form, Path, Request
+from fastapi.responses import JSONResponse
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -26,7 +27,7 @@ def get_db_connection():
         database = "website"
     )
 
-def validate_member(name, username, password):
+def validate_member(name: str, username: str, password: str):
     name_regex = r'^[\u4e00-\u9fa5a-zA-Z0-9_]{3,15}$'
     username_regex = r'^[a-zA-Z0-9_]{3,15}$'
     password_regex = r'^[a-zA-Z0-9_]{6,50}$'
@@ -57,7 +58,7 @@ async def signup(
     ):
     if not validate_member(name, username, password):
         message = f"An unexpected error occurred: 105"
-        return RedirectResponse(f"/error?message={message}", status_code=302)
+        return RedirectResponse(f"/error?message={message}", status_code=303)
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -67,7 +68,7 @@ async def signup(
             cursor.close()
             conn.close()
             message = "Repeated Username."
-            return RedirectResponse(f"/error?message={message}", status_code = 302)
+            return RedirectResponse(f"/error?message={message}", status_code = 303)
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
@@ -78,12 +79,12 @@ async def signup(
         conn.commit()
         cursor.close()
         conn.close()
-        return RedirectResponse("/", status_code=302)
+        return RedirectResponse("/", status_code=303)
     except Exception as e:
         conn.close()
         print(str(e))
         message = f"An unexpected error occurred: 101"
-        return RedirectResponse(f"/error?message={message}", status_code=302)
+        return RedirectResponse(f"/error?message={message}", status_code=303)
 
 @app.post("/signin", response_class=HTMLResponse)
 async def signin(
@@ -108,32 +109,33 @@ async def signin(
                 return RedirectResponse("/member", status_code = 302)
             else:
                 message = "Incorrect Username or Password."
-                return RedirectResponse(f"/error?message={message}", status_code = 302)
+                return RedirectResponse(f"/error?message={message}", status_code = 303)
     except Exception as e:
+        conn.close()
         message = f"Incorrect Username or Password. 102"
-        return RedirectResponse(f"/error?message={message}", status_code = 302)
+        return RedirectResponse(f"/error?message={message}", status_code = 303)
 
 @app.get("/signout", response_class=HTMLResponse)
 async def signout(request: Request):
     request.session.clear()
-    return RedirectResponse("/", status_code=302)
+    return RedirectResponse("/")
 
 @app.get("/error", response_class=HTMLResponse)
 async def error(request: Request, message: str = None):
     title = "登入失敗頁面"
     info_title = "失敗頁面"
     return templates.TemplateResponse(request = request, name = "info.html", 
-                                      context = {"title":title ,
-                                                 "info_title":info_title, 
+                                      context = {"title": title ,
+                                                 "info_title": info_title, 
                                                  "message": message,
                                                  "link": "/",
                                                  "link_message": "回首頁"
                                                  })
 
 @app.get("/member", response_class=HTMLResponse)
-async def member(request: Request, hint: str = ""):
+async def member(request: Request, hintInfo: str = ""):
     if request.session.get("SIGNED_IN") != True:
-        return RedirectResponse(url="/", status_code=302)
+        return RedirectResponse(url="/")
     name = request.session['NAME']
     title = "會員頁面"
     info_title = "歡迎光臨，這是會員頁"
@@ -156,15 +158,53 @@ async def member(request: Request, hint: str = ""):
         message="An error occurred while reading the message. err103"
         return RedirectResponse(f"/error?message={message}", status_code = 302)
     return templates.TemplateResponse(request = request, name = "member.html", 
-                                      context = {"title":title ,
+                                      context = {"title": title ,
                                                  "info_title":info_title,
                                                  "message": message,
                                                  "link": "/signout",
                                                  "link_message": "登出系統",
-                                                 "hint": hint,
+                                                 "hintInfo": hintInfo,
                                                  "name": name,
                                                  "contents": contents
                                                  })
+
+@app.get("/api/member")
+async def query_member(request: Request, username: str):
+    # print(request.session)
+    if request.session.get("SIGNED_IN") != True:
+        return RedirectResponse(url="/")
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT name, username FROM members WHERE username = %s;", (username,))
+        existing_user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if existing_user:
+            response_data = {
+                "data":{
+                    "name": existing_user[0],
+                    "username": existing_user[1]
+                }
+            }
+        else:
+            response_data = {"data": None}
+        return JSONResponse(content = response_data)
+    except Exception as e:
+        conn.close()
+        print(f"Error: {str(e)}")
+        return JSONResponse(content = {"data": None})
+
+@app.patch("/api/member")
+async def update_name(request: Request, name: dict):
+    if request.session.get("SIGNED_IN") != True:
+        return RedirectResponse(url="/")
+    member_id = request.session['MEMBER_ID']
+    new_name = name.get("name")
+    if not validate_member(name):
+        print("XXX")
+    print("OK")
+
 
 @app.post("/createMessage", response_class=HTMLResponse)
 async def createMessage(
@@ -172,10 +212,10 @@ async def createMessage(
     createMessage: Annotated[str, Form()],
     ):
     if request.session.get("SIGNED_IN") != True:
-        return RedirectResponse(url="/", status_code=302)
+        return RedirectResponse(url="/", status_code=303)
     if not validate_message(createMessage):
-        hint = "留言至少要輸入 3 個文字"
-        return RedirectResponse(f"/member?hint={hint}", status_code=302)
+        hintInfo = "留言至少要輸入 3 個文字"
+        return RedirectResponse(f"/member?hintInfo={hintInfo}", status_code=303)
     
     member_id = request.session['MEMBER_ID']
     try:
@@ -185,10 +225,11 @@ async def createMessage(
         conn.commit()
         cursor.close()
         conn.close()
-        return RedirectResponse("/member", status_code=302)
+        return RedirectResponse("/member", status_code=303)
     except Exception as e:
+        conn.close()
         message = f"Create Message Error. 103"
-        return RedirectResponse(f"/error?message={message}", status_code = 302)
+        return RedirectResponse(f"/error?message={message}", status_code = 303)
     
 @app.post("/deleteMessage", response_class=HTMLResponse)
 async def deleteMessage(
@@ -206,8 +247,10 @@ async def deleteMessage(
         conn.commit()
         cursor.close()
         conn.close()
-        return RedirectResponse("/member", status_code=302)
+        return RedirectResponse("/member", status_code=303)
     except Exception as e:
+        conn.close()
         message = f"Delete Message Error. 104"
-        return RedirectResponse(f"/error?message={message}", status_code = 302)
+        return RedirectResponse(f"/error?message={message}", status_code = 303)
+
 

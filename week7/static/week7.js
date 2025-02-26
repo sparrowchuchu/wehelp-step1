@@ -78,15 +78,15 @@ function validataForm(){
         return false;  // Prevent form submission
     }
     if (!nameRegex.test(name)) {
-        alert("Name must be at least 3 characters.");
+        alert("The name must be between 3 and 15 characters.");
         return false;
     }
     if (!usernameRegex.test(username)) {
-        alert("UserName must be at least 3 characters.");
+        alert("The username must be between 3 and 15 characters.");
         return false;
     }
     if (!passwordRegex.test(password)) {
-        alert("Password must be at least 6 characters.");
+        alert("The password must be between 6 and 50 characters.");
         return false;
     }
     if (!checkbox.checked) {
@@ -109,11 +109,11 @@ if (signin){
         }
         if (!usernameRegex.test(username)) {
             event.preventDefault();
-            alert("UserName must be at least 3 characters.");
+            alert("The username must be between 3 and 15 characters.");
         }
         if (!passwordRegex.test(password)) {
             event.preventDefault();
-            alert("Password must be at least 6 characters.");
+            alert("The password must be between 6 and 50 characters.");
         }
     });
 }

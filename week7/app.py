@@ -201,6 +201,7 @@ async def update_name(request: Request, name: dict):
     member_id = request.session['MEMBER_ID']
     new_name = name.get("name")
     if not validate_name(new_name):
+        print("Invalid Name")
         return JSONResponse(content={"error": True})
     try:
         conn = get_db_connection()

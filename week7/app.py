@@ -40,7 +40,7 @@ def validate_password(password: str) -> bool:
     return bool(re.match(password_regex, password))
 
 def validate_message(content: str) -> bool:
-    message_regex = r'^[\u4e00-\u9fa5A-Za-z0-9\s\.,!?-]{3,200}$'
+    message_regex = r'^[\u4e00-\u9fa5A-Za-z0-9\s\.,!?-]{3,50}$'
     return bool(re.match(message_regex, content))
 
 
@@ -171,8 +171,6 @@ async def member(request: Request, hintInfo: str = ""):
 
 @app.get("/api/member")
 async def query_member(request: Request, username: str):
-    if request.session.get("SIGNED_IN") != True:
-        return RedirectResponse(url="/")
     try:
         conn = get_db_connection()
         cursor = conn.cursor()

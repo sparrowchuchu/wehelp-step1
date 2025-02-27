@@ -176,15 +176,16 @@ async def query_member(request: Request, username: str):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT name, username FROM members WHERE username = %s;", (username,))
+        cursor.execute("SELECT id, name, username FROM members WHERE username = %s;", (username,))
         existing_user = cursor.fetchone()
         cursor.close()
         conn.close()
         if existing_user:
             response_data = {
                 "data":{
-                    "name": existing_user[0],
-                    "username": existing_user[1]
+                    "id": existing_user[0],
+                    "name": existing_user[1],
+                    "username": existing_user[2]
                 }
             }
         else:

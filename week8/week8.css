@@ -1,0 +1,206 @@
+
+body{
+    margin:0px; padding:0px;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Fira Sans', Ubuntu, Oxygen, 'Oxygen Sans', Cantarell, 'Droid Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Lucida Grande', Helvetica, Arial, sans-serif;
+}
+
+nav{
+    height: 30px;
+    margin:20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header{
+    height: 250px;
+    background-color: lightblue;
+    margin-bottom: 20px;
+}
+
+main{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+footer{height: 250px;}
+
+ul{display: flex; margin: 0px; padding: 0px;}
+li{list-style: none; text-align: center;}
+
+h4{font-weight: normal;}
+
+.nav-list li{margin-left: 32px;}
+
+.title{
+    font-size: 2rem;
+    font-weight:bold;
+    text-align: center;
+}
+
+.box-s{
+    width: 1200px;
+    display:flex; 
+}
+.promo{
+    width: 33%; height: 50px;
+    margin: 10px;
+    display:flex; 
+    align-items: center;
+    background-color: lightblue;
+}
+.clip-img-s {
+    width:80px; height: 50px;
+    margin-right: 15px;
+    overflow: hidden;
+}
+.clip-img-s img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+
+.box-b{
+    width: 1200px;
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(2,1fr);
+}
+.item{
+    position: relative;
+    height: 120px;
+    margin: 10px;
+}
+.item-mark{
+    position: absolute;
+    top: 10px; right: 10px;
+    opacity: 0.8;
+}
+
+.item-img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+.item-title{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    width:-webkit-fill-available;
+    width:-moz-available;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    padding: 7px 7px;
+    background-color: rgba(207, 211, 197, 0.8);
+}
+
+
+/* drop */
+.dropOption {
+    position: relative;
+    padding: 10px;
+    cursor: pointer;
+}
+.dropdown {
+    display: none;
+    position: absolute; 
+    top: 0; right: 0;
+    width: 250px; height:100vh;
+    margin: 0; padding: 0;
+    background-color: white;
+    box-shadow: 0px 2px 3px 0px #2c2c2c;
+    overflow: auto;
+    z-index: 10;
+}
+.dropdown li{
+    display: block;
+    margin: 20px; padding: 12px;
+    cursor: pointer;
+}
+.btn-x{
+    position: absolute;
+    top: 10px; right: 10px;
+    cursor: pointer;
+}
+
+/* loadmore button */
+.btn-load{
+    width: 100px; height: 20px;
+    margin: 50px auto;
+    padding: 10px;
+    border: 1px solid rgba(207, 211, 197, 0.8);
+    font-size: 0.7rem;
+    background-color: rgba(207, 211, 197, 0.5);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* feature */
+.center{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.space-between{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.single-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* RWD */
+.mod-desktop{display: flex;}
+.mod-mobile{display: none;}
+
+/* @media 順序很重要 */
+@media screen and (max-width:1200px){
+    main{
+        max-width: 90vw;
+        margin: 0 auto;
+    }
+
+    .box-s{
+        width: 90vw;
+        display: grid; /* 改為使用 grid 排版 */
+        grid-template-columns: 1fr 1fr; 
+        grid-template-rows: auto auto; /* 2 行 */
+    }
+    .promo{
+        width: 100%;
+        width:-webkit-fill-available;
+        width:-moz-available;
+    }
+    .promo:nth-child(3) {grid-column: 1 / 3;}
+
+    .box-b{
+        width: 90vw; 
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr); 
+    }
+    .item:nth-child(9) {grid-column: 1 / 3;}
+    .item:nth-child(10) {grid-column: 3 / 5;}
+}
+
+@media screen and (max-width:600px){
+    .mod-desktop{display: none;}
+    .mod-mobile{display: flex;}
+
+    .box-s{display:block;}
+    .promo{margin: 20px 10px;}
+
+    .box-b{display:block;}
+    .item{
+        height: 270px;
+        margin: 20px 10px;
+    }
+}
+
+

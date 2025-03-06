@@ -1,3 +1,25 @@
+const signin = document.forms['signinForm'];
+if (signin){
+    signin.addEventListener('submit', function (event) {
+        let username = signin.username.value;
+        let password = signin.password.value;
+        let usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
+        let passwordRegex = /^[a-zA-Z0-9_]{6,50}$/;
+        if (username == "" || password == "") {
+            event.preventDefault();
+            alert("Please fill in all the fields.");
+        }
+        if (!usernameRegex.test(username)) {
+            event.preventDefault();
+            alert("The username must be between 3 and 15 characters.");
+        }
+        if (!passwordRegex.test(password)) {
+            event.preventDefault();
+            alert("The password must be between 6 and 50 characters.");
+        }
+    });
+}
+
 document.querySelector("#updateNameBtn").addEventListener("click", function(event){
     let updateName = document.querySelector("#updateName").value;
     let result = document.querySelector("#updateNameResult");
@@ -96,25 +118,5 @@ function validataForm(){
     return true;  // Allow form submission
 }
 
-const signin = document.forms['signinForm'];
-if (signin){
-    signin.addEventListener('submit', function (event) {
-        let username = signin.username.value;
-        let password = signin.password.value;
-        let usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
-        let passwordRegex = /^[a-zA-Z0-9_]{6,50}$/;
-        if (username == "" || password == "") {
-            event.preventDefault();
-            alert("Please fill in all the fields.");
-        }
-        if (!usernameRegex.test(username)) {
-            event.preventDefault();
-            alert("The username must be between 3 and 15 characters.");
-        }
-        if (!passwordRegex.test(password)) {
-            event.preventDefault();
-            alert("The password must be between 6 and 50 characters.");
-        }
-    });
-}
+
 

@@ -30,3 +30,7 @@ Build a member system.
 
 ## Assignment - Week 7
 Based on the member system built in week 6, add more features in the member page by adopting separation of front-end and back-end design.
+
+## Topic Study - Week 8
+Sharing session
+

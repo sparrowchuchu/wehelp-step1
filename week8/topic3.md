@@ -1,4 +1,4 @@
-Topic 3: Fetch and CORS
+# Topic 3: Fetch and CORS
 Using built-in JavaScript fetch function, we can send HTTP requests to the back-end and get HTTP responses without refreshing or redirecting the page. Cross Origin Resource Sharing (CORS) concept plays a critical role if we want to send a request to a different domain with the fetch function.
 Follow learning steps below to prepare your report:
 1. What is CORS?

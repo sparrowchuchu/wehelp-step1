@@ -1,4 +1,4 @@
-Task 4: Connection Pool
+# Task 4: Connection Pool
 The standard procedure to work with databases is: connect, execute SQL statements, and finally close the connection. Connection Pool is a programming technique to make the connection between back-end system and database more stable, and increase overall throughput.
 Follow learning steps below to prepare your report:
 1. What is Connection Pool? Why do we want to use Connection Pool?

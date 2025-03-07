@@ -26,23 +26,6 @@ def get_db_connection():
         database = "website"
     )
 
-def validate_member(name, username, password):
-    name_regex = r'^[\u4e00-\u9fa5a-zA-Z0-9_]{3,15}$'
-    username_regex = r'^[a-zA-Z0-9_]{3,15}$'
-    password_regex = r'^[a-zA-Z0-9_]{6,50}$'
-    if not re.match(name_regex, name):
-        return False
-    if not re.match(username_regex, username):
-        return False
-    if not re.match(password_regex, password):
-        return False
-    return True
-
-def validate_message(content: str) -> bool:
-    message_regex = r'^[\u4e00-\u9fa5A-Za-z0-9\s\.,!?-]{3,200}$'
-    return bool(re.match(message_regex, content))
-
-
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     info_title = "歡迎光臨，請註冊登入系統"
@@ -55,9 +38,6 @@ async def signup(
     username: Annotated[str, Form()], 
     password: Annotated[str, Form()]
     ):
-    if not validate_member(name, username, password):
-        message = f"An unexpected error occurred: 105"
-        return RedirectResponse(f"/error?message={message}", status_code=302)
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -173,10 +153,6 @@ async def createMessage(
     ):
     if request.session.get("SIGNED_IN") != True:
         return RedirectResponse(url="/", status_code=302)
-    if not validate_message(createMessage):
-        hint = "留言至少要輸入 3 個文字"
-        return RedirectResponse(f"/member?hint={hint}", status_code=302)
-    
     member_id = request.session['MEMBER_ID']
     try:
         conn = get_db_connection()

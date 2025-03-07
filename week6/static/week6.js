@@ -12,24 +12,9 @@ function validataForm(){
     let username = signupForm.username.value;
     let password = signupForm.password.value;
     let checkbox = signupForm.terms;
-    let nameRegex = /^[\u4e00-\u9fa5a-zA-Z0-9_]{3,15}/;
-    let usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
-    let passwordRegex = /^[a-zA-Z0-9_]{6,50}$/;
     if (name == "" || username == "" || password == "") {
         alert("Please fill in all the fields.");
         return false;  // Prevent form submission
-    }
-    if (!nameRegex.test(name)) {
-        alert("Name must be at least 3 characters.");
-        return false;
-    }
-    if (!usernameRegex.test(username)) {
-        alert("UserName must be at least 3 characters.");
-        return false;
-    }
-    if (!passwordRegex.test(password)) {
-        alert("Password must be at least 6 characters.");
-        return false;
     }
     if (!checkbox.checked) {
         alert("Please check the terms first.");
@@ -43,19 +28,9 @@ if (signin){
     signin.addEventListener('submit', function (event) {
         let username = signin.username.value;
         let password = signin.password.value;
-        let usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
-        let passwordRegex = /^[a-zA-Z0-9_]{6,50}$/;
         if (username == "" || password == "") {
             event.preventDefault();
             alert("Please fill in all the fields.");
-        }
-        if (!usernameRegex.test(username)) {
-            event.preventDefault();
-            alert("UserName must be at least 3 characters.");
-        }
-        if (!passwordRegex.test(password)) {
-            event.preventDefault();
-            alert("Password must be at least 6 characters.");
         }
     });
 }
